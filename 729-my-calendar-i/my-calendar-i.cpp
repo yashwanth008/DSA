@@ -3,14 +3,14 @@ public:
     MyCalendar() {
         
     }
-    map<int,int> intervals;
+    map<int,int> intv;
     bool book(int startTime, int endTime) {
-        auto it = intervals.upper_bound(startTime);
-        if(it == intervals.end() || it->second>=endTime){
-            intervals[endTime] = startTime;
-            return true;
-        }
-        return false;
+      auto it = intv.upper_bound(startTime);
+      if(it == intv.end() || it->second >= endTime){
+        intv[endTime] = startTime;
+        return true;
+      }  
+      return false;
     }
 };
 
