@@ -1,22 +1,21 @@
 class Solution {
 public:
     vector<string> subdomainVisits(vector<string>& cpdomains) {
-        unordered_map<string,int> subDomainCount;
-        for(auto it:cpdomains){
-            int i = it.find(" ");
-            int num = stoi(it.substr(0,i));
-            string s = it.substr(i+1);
+        unordered_map<string,int> dmCount;
+        for(auto dm:cpdomains){
+            int idx = dm.find(" ");
+            int num = stoi(dm.substr(0,idx));
+            string s = dm.substr(idx+1);
             for(int i = 0;i<s.size();i++){
                 if(s[i] == '.'){
-                    subDomainCount[s.substr(i+1)] += num;
+                    dmCount[s.substr(i+1)] += num;
                 }
             }
-            subDomainCount[s]+=num;
-            cout<<subDomainCount[s];   
+            dmCount[s] +=num;
         }
-        vector<string>result;
-        for(auto dm:subDomainCount){
-            result.push_back(to_string(dm.second)+" "+dm.first);
+        vector<string> result;
+        for(auto k:dmCount){
+            result.push_back(to_string(k.second) + " " + k.first);
         }
         return result;
     }
