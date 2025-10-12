@@ -1,68 +1,83 @@
 class Solution {
 public:
-    int aliceIncome;
-    unordered_map<int,int> BobMap; // bobs node and time taken to reach that node data
     vector<vector<int>> adjList;
-    bool DfsBob(int curr,int time,vector<bool>&visited){
-        visited[curr] = true;
-        BobMap[curr] = time;
-
-        if(curr == 0){ return true; } // reached the target node; and will return true only if
-        // reached the node 0
-
-        // explore the ngbr
-        for(auto &ngbr:adjList[curr]){
-            if(!visited[ngbr]){
-                if(DfsBob(ngbr,time+1,visited)) return true;
-            }
-        }
-        //if didnt reach node 0 then backtrack so earse that node 
-        BobMap.erase(curr);
-        return false;
+    unordered_map<int,int> BobMap;
+    unordered_map<int,int> AliceMap;
+    int aliceincome = INT_MIN;
+    int bobincome = INT_MIN;
+    // buidling aliceTime map
+    void buildAliceTime(int u, int p, int t) {
+        AliceMap[u] = t;
+        for (int v : adjList[u]) if (v != p) buildAliceTime(v, u, t + 1);
     }
-    // dfs of alice to reach a leaf node which can fetch her the most income;
-    void DfsAlice(int curr,int time,int income,vector<bool>&visited,vector<int>&amount){
-        visited[curr] = true;
 
-        // check if bob never reached this node or if reached alice reached first
-        if(BobMap.find(curr) == BobMap.end() || time < BobMap[curr]){
+    bool DfsBob(int curr,int time,vector<bool>&visited,int income,vector<int>& amount){
+        visited[curr] = true;// marking it true
+        BobMap[curr] = time; // making Bob node to time map
+
+        // either alice never visited this node or first visited by bob
+        if(!AliceMap.count(curr) || time < AliceMap[curr]){
             income += amount[curr];
-        }else if(time == BobMap[curr]){ // both reached at same time
+        }else if(time == AliceMap[curr]){ // if reached at same time
             income += (amount[curr]/2);
         }
 
-        // if leaf node is found then update the AliceIncome 
-        if(adjList[curr].size() == 1 && curr != 0){
-            aliceIncome = max(aliceIncome,income);
+        if(curr == 0){ // when bob reaches his destination 
+            bobincome = income;
+            return true;
+            
+        };
+
+        // traversing through all adj nodes 
+        for(auto &ngbr: adjList[curr]){
+            if(!visited[ngbr]){
+                if(DfsBob(ngbr,time+1,visited,income,amount)) return true;
+            }
+        }
+        BobMap.erase(curr);
+        return false;
+    }
+    void DfsAlice(int curr,int time,vector<bool>&visited,int income,vector<int>& amount){
+        visited[curr] = true; // mark visited
+        
+        // similar to bob 
+        if(!BobMap.count(curr) || time < BobMap[curr]){
+            income += amount[curr];
+        }else if(time == BobMap[curr]){
+            income += (amount[curr]/2);
         }
 
-        //else traverse the adjlist
-        for(auto &ngbr:adjList[curr]){
+        // if we reached leaf node and seeing that current is not consider cause current also has 1
+        if(adjList[curr].size() == 1 && curr != 0){
+            aliceincome = max(aliceincome,income);
+        }
+
+        //traverse
+        for(auto &ngbr :adjList[curr]){
             if(!visited[ngbr]){
-                DfsAlice(ngbr,time+1,income,visited,amount);
+                DfsAlice(ngbr,time+1,visited,income,amount);
             }
         }
     }
-
     int mostProfitablePath(vector<vector<int>>& edges, int bob, vector<int>& amount) {
-        int n = amount.size(); // nodes 0 to n-1
-        aliceIncome = INT_MIN;
-        // created adjList
-        adjList.assign(n, {});
-        for(auto &it: edges){
+        int n = amount.size();
+        adjList.assign(n,{});
+        for(auto &it:edges){
             adjList[it[0]].push_back(it[1]);
             adjList[it[1]].push_back(it[0]);
         }
-        // visited table
+
+        buildAliceTime(0, -1, 0);
         vector<bool> visited(n,false);
-        // dfs for bob to traverse and reach Node 0
-        int time = 0;
-        DfsBob(bob,time,visited); // start node of bob, time taken for bob, visited array
-        // dfs for alice to get max amount
-        int income = 0;
+        int Bincome = 0;
+        DfsBob(bob,0,visited,Bincome,amount);
+
+       
+        int Aincome = 0;
         visited.assign(n,false);
-        DfsAlice(0,0,income,visited,amount);
-        return aliceIncome;
+        DfsAlice(0,0,visited,Aincome,amount);
+        cout<<bobincome<<" - "<<aliceincome;
+        return aliceincome;
 
     }
 };
