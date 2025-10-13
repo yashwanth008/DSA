@@ -2,7 +2,7 @@ class Solution {
 public:
     
     int numUniqueEmails(vector<string>& emails) {
-        unordered_set<string> unquie;  //checking uniqie domain and localname
+        unordered_map<string,int> unquie;  //checking uniqie domain and localname
         for(string &email:emails){
             int n = email.size();
             string cleanEmail = "";
@@ -14,8 +14,7 @@ public:
             int pos = email.rfind('@');
             string domainName = email.substr(pos,n);
             cleanEmail+=domainName;
-            cout<<cleanEmail;
-            unquie.insert(cleanEmail);
+            if(!unquie.count(cleanEmail)) unquie[cleanEmail] = n;
             
         }
         return unquie.size();
