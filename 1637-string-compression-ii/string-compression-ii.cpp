@@ -1,13 +1,22 @@
 int dp[101][27][101][101];
+// max idx = range is given as 100 
+// max alphabets 26 (last_char)
+// max count again largest is 100
+// number of deletions k max is 100 since count can be 100
 class Solution {
 public:
     
     int solve(int idx,int last_char,int last_count,int k,string& s){
             int n = s.size();
-            if(k < 0) return 1e9;
-            if(idx == n) return 0;
+            if(k < 0) return 1e9; // edge case if neg deletions is given
+            if(idx == n) return 0; // when idx has reached the end
+
+            // edge case to return only know values
             if (dp[idx][last_char][last_count][k] != -1) 
                 return dp[idx][last_char][last_count][k];
+
+            // we omly have two options either to choose this char or delete thsi char
+
             //option 1
             //delete;
             int res = solve(idx+1,last_char,last_count,k-1,s);
@@ -15,6 +24,7 @@ public:
             //keep two ways -> 1, the idx is same as last char or 2. a new char
             if(s[idx] - 'a' == last_char){
                 int inc = 0;
+                //
                 if(last_count == 1 || last_count == 9 || last_count == 99){
                     inc = 1;
                 }
