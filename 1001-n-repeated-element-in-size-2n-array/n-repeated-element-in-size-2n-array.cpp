@@ -6,9 +6,8 @@ public:
         for(int i:nums){
             freq[i]++;
             if(freq[i] > 1){
-                
-                res = i;
-                break;
+                return i;
+                exit;
             }
         }
         return res;
