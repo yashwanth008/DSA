@@ -2,7 +2,6 @@ class Solution {
 public:
     int divisorsSum(int num) {
         vector<int> divs;
-        // Iterate up to the square root inclusive
         for (int i = 1; i * i <= num; i++) {
             if (num % i == 0) {
                 if (i * i == num) {
@@ -12,7 +11,7 @@ public:
                     divs.push_back(num / i);
                 }
             }
-            // Optimization: if we exceed 4 divisors, we can stop
+            // needs exactly 4
             if (divs.size() > 4) break;
         }
 
