@@ -1,17 +1,21 @@
 class Solution {
 public:
     bool checkInclusion(string s1, string s2) {
-        int k = s1.size();
-        array<int,26> need{};
-        array<int,26> win{};
-        if( k > s2.size()) return false;
-        for(char c : s1) need[c - 'a']++;
-        for(int i = 0;i < k;++i) win[s2[i] - 'a']++;
-        if(win == need) return true;
-        for(int i = k;i < s2.size();++i){
-            win[s2[i] - 'a']++;
-            win[s2[i-k] - 'a']--;
-            if(win == need) return true;
+        unordered_map<char,int> s1Freq,s2Freq;
+        for(char c:s1) s1Freq[c]++;
+        int l = 0,r = 0;
+        while(r<s2.size()){
+            char c = s2[r];
+            s2Freq[c]++;
+            if((r-l+1) > s1.size()){
+                char leftChar = s2[l];
+                s2Freq[leftChar]--;
+                if(s2Freq[leftChar] == 0) s2Freq.erase(leftChar);
+                l++;
+            }
+            if((r-l+1) == s1.size())
+                if(s2Freq == s1Freq) return true;
+            r++;
         }
         return false;
     }
