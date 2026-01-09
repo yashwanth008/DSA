@@ -1,39 +1,37 @@
 class Solution {
 public:
     string minWindow(string s, string t) {
-        int left = 0,right = 0;
+        unordered_map<char,int> charFreq_t,charFreq_s;
+        for(char c:t) charFreq_t[c]++;
+        //operates window sizing
+        int left = 0,right  = 0;
         int minLen = INT_MAX;
-        unordered_map<char,int> charFreq,s_mat;
-        int target_size = t.size();
-        int debt = 0,newLeft = 0;
-
-        for(char c:t) charFreq[c]++;
-
-
+        // a counter to operate how many matched with t
+        int present = 0;
+        int req_total = t.size();
+        
+        // a temp left so get from substr
+        int newLeft = 0;
         while(right < s.size()){
-            char ch = s[right];
-            s_mat[ch]++;
+            char c = s[right];
+            charFreq_s[c]++;
+            if(charFreq_t.count(c) && charFreq_s[c] <= charFreq_t[c]) present++;
 
-            if(charFreq.count(ch) && s_mat[ch] <= charFreq[ch]){
-                debt++;
-            }
-           
-            while(debt == target_size){
-                if((right-left+1)<minLen){
-                    minLen = (right-left+1);
+            // see if all the t chars are matched
+            while(present == req_total){
+                if((right - left + 1) < minLen){
+                    minLen = right - left + 1;
                     newLeft = left;
+
                 }
-                char leftchar = s[left];
-                s_mat[leftchar]--;
-                
-                if(charFreq.count(leftchar) && s_mat[leftchar]<charFreq[leftchar]){
-                    debt--;
-                }
+                char c_l = s[left];
+                charFreq_s[c_l]--;
+                // since when left reaches C at pos 5 it reduces to 0 so it will fail if condn 
+                if(charFreq_t.count(c_l) && charFreq_s[c_l] < charFreq_t[c_l]) present--;
                 left++;
             }
             right++;
         }
-        return minLen == INT_MAX?  "" :s.substr(newLeft,minLen);
-
+        return minLen == INT_MAX ? "" : s.substr(newLeft,minLen);
     }
 };
