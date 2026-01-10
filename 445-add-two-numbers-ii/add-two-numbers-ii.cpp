@@ -10,40 +10,89 @@
  */
 class Solution {
 public:
-    ListNode* reverse(ListNode* head){
-        ListNode* curr = head;
-        ListNode* nxt = nullptr,*prev = nullptr;
-        while(curr != NULL){
-            nxt = curr->next;
-            curr->next = prev;
-            prev = curr;
-            curr = nxt;
-        }
-        return prev;
-    }
+    // ListNode* reverse(ListNode* head){
+    //     ListNode* curr = head;
+    //     ListNode* nxt = nullptr,*prev = nullptr;
+    //     while(curr != NULL){
+    //         nxt = curr->next;
+    //         curr->next = prev;
+    //         prev = curr;
+    //         curr = nxt;
+    //     }
+    //     return prev;
+    // }
     ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
-        ListNode* newl1 = reverse(l1);
-        ListNode* newl2 = reverse(l2);
-        int carry = 0;
-        ListNode* dummy = new ListNode();
-        ListNode* temp = dummy;
-        while(newl1 != NULL || newl2 != NULL || carry){
-            int sum = 0;
-            if(newl1 != NULL){
-                sum+=newl1->val;
-                newl1 = newl1->next;
-            }
-            if(newl2 != NULL){
-                sum+=newl2->val;
-                newl2 = newl2->next;
-            }
-            sum+=carry;
-            carry = sum/10;
-            ListNode* res = new ListNode(sum%10);
-            temp->next = res;
-            temp = temp->next;
-        }
-        ListNode* testing = reverse(dummy->next);
-        return testing;
+    //     ListNode* newl1 = reverse(l1);
+    //     ListNode* newl2 = reverse(l2);
+    //     int carry = 0;
+    //     ListNode* dummy = new ListNode();
+    //     ListNode* temp = dummy;
+    //     while(newl1 != NULL || newl2 != NULL || carry){
+    //         int sum = 0;
+    //         if(newl1 != NULL){
+    //             sum+=newl1->val;
+    //             newl1 = newl1->next;
+    //         }
+    //         if(newl2 != NULL){
+    //             sum+=newl2->val;
+    //             newl2 = newl2->next;
+    //         }
+    //         sum+=carry;
+    //         carry = sum/10;
+    //         ListNode* res = new ListNode(sum%10);
+    //         temp->next = res;
+    //         temp = temp->next;
+    //     }
+    //     ListNode* testing = reverse(dummy->next);
+    //     return testing;
+    // }
+
+    //sol 2 efficent one
+    stack<int> s1;
+    stack<int> s2;
+    ListNode* temp1 = l1;
+    ListNode* temp2 = l2;
+
+    while(temp1 != NULL){
+        s1.push(temp1->val);
+        temp1 = temp1->next;
     }
+   
+
+    while(temp2 != NULL){
+        s2.push(temp2->val);
+        temp2 = temp2->next;
+    }
+   
+
+    int carry = 0;
+    ListNode* dummy = new ListNode();
+    ListNode* temp = dummy;
+    stack<int>res;
+    while(!s1.empty() || !s2.empty() || carry){
+        int sum = 0;
+        if(!s1.empty()){
+            sum+=s1.top();
+            cout<<s1.top()<<" ";
+            s1.pop();
+        }
+        if(!s2.empty()){
+            sum+=s2.top();
+            s2.pop();
+        }
+
+        sum+=carry;
+        carry = sum/10;
+        res.push(sum%10);
+    }
+    while(!res.empty()){
+        
+        ListNode* rest = new ListNode(res.top());
+        temp->next = rest;
+        temp = temp->next;
+        res.pop();
+    }
+    return dummy->next;
+    }
+
 };
