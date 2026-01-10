@@ -123,7 +123,8 @@ public:
             s2.pop();
         }
         carry = sum/10;
-        ListNode* rest = new ListNode(sum%10);
+        int dig = sum%10;
+        ListNode* rest = new ListNode(dig);
         rest->next = head;
         head = rest;
     }
