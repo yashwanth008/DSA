@@ -22,6 +22,7 @@ public:
     //     return prev;
     // }
     ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+    // sol 1 second best sol 
     //     ListNode* newl1 = reverse(l1);
     //     ListNode* newl2 = reverse(l2);
     //     int carry = 0;
@@ -47,7 +48,54 @@ public:
     //     return testing;
     // }
 
-    //sol 2 efficent one
+    //sol 2 least one
+    // stack<int> s1;
+    // stack<int> s2;
+    // ListNode* temp1 = l1;
+    // ListNode* temp2 = l2;
+
+    // while(temp1 != NULL){
+    //     s1.push(temp1->val);
+    //     temp1 = temp1->next;
+    // }
+   
+
+    // while(temp2 != NULL){
+    //     s2.push(temp2->val);
+    //     temp2 = temp2->next;
+    // }
+   
+
+    // int carry = 0;
+    // ListNode* dummy = new ListNode();
+    // ListNode* temp = dummy;
+    // stack<int>res;
+    // while(!s1.empty() || !s2.empty() || carry){
+    //     int sum = 0;
+    //     if(!s1.empty()){
+    //         sum+=s1.top();
+    //         cout<<s1.top()<<" ";
+    //         s1.pop();
+    //     }
+    //     if(!s2.empty()){
+    //         sum+=s2.top();
+    //         s2.pop();
+    //     }
+
+    //     sum+=carry;
+    //     carry = sum/10;
+    //     res.push(sum%10);
+    // }
+    // while(!res.empty()){
+        
+    //     ListNode* rest = new ListNode(res.top());
+    //     temp->next = rest;
+    //     temp = temp->next;
+    //     res.pop();
+    // }
+    // return dummy->next;
+    // }
+
     stack<int> s1;
     stack<int> s2;
     ListNode* temp1 = l1;
@@ -66,9 +114,7 @@ public:
    
 
     int carry = 0;
-    ListNode* dummy = new ListNode();
-    ListNode* temp = dummy;
-    stack<int>res;
+    ListNode* head = nullptr;
     while(!s1.empty() || !s2.empty() || carry){
         int sum = 0;
         if(!s1.empty()){
@@ -83,16 +129,11 @@ public:
 
         sum+=carry;
         carry = sum/10;
-        res.push(sum%10);
+        ListNode* rest = new ListNode(sum%10);
+        rest->next = head;
+        head = rest;
     }
-    while(!res.empty()){
-        
-        ListNode* rest = new ListNode(res.top());
-        temp->next = rest;
-        temp = temp->next;
-        res.pop();
-    }
-    return dummy->next;
+    return head;
     }
 
 };
