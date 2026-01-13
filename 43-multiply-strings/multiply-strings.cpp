@@ -10,12 +10,14 @@ public:
         for(int i = n1-1;i>=0;i--){
             for(int j = n2-1; j>=0; j--){
                 int mul = (num1[i] - '0') * (num2[j] - '0');
+                // this is a smart trick to store muliplication val since the largest of res will be n1 + n2 size
                 int sum = mul + sol[i+j+1];
                 sol[i+j+1] = sum%10;
                 sol[i+j] += sum/10;
             }
         }
         for(int x:sol){
+            // the leading 0s should not enter the result so if its empty and a zero appears dont add lol a smart trick 
             if(!(res.empty() && x == 0)){
                 res.push_back(x + '0');
             }
